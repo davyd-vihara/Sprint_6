@@ -1,7 +1,5 @@
 import allure
 import pytest
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from pages.main_page import MainPage
 from pages.order_page import OrderPage
 from data.test_data import ORDER_TEST_DATA
@@ -70,23 +68,18 @@ class TestOrder:
             main_page.go_to_site()
 
         with allure.step("Сохранить текущее окно"):
-            original_window = driver.current_window_handle
+            original_window = main_page.get_current_window_handle()
 
         with allure.step("Нажать на логотип Яндекс"):
             main_page.click_yandex_logo()
 
         with allure.step("Дождаться открытия нового окна и переключиться"):
-            WebDriverWait(driver, Config.TIMEOUT).until(EC.number_of_windows_to_be(2))
-
-            for window_handle in driver.window_handles:
-                if window_handle != original_window:
-                    driver.switch_to.window(window_handle)
-                    break
+            main_page.wait_for_new_window_and_switch()
 
         with allure.step("Проверить что открылась страница Дзен"):
-            WebDriverWait(driver, Config.TIMEOUT).until(EC.url_contains("dzen.ru"))
-            assert "dzen.ru" in driver.current_url
+            main_page.wait_for_url_contains("dzen.ru")
+            assert main_page.is_dzen_opened()
 
         with allure.step("Закрыть новое окно и вернуться к исходному"):
-            driver.close()
-            driver.switch_to.window(original_window)
+            main_page.close_current_window()
+            main_page.switch_to_window(original_window)

@@ -72,3 +72,33 @@ class BasePage:
         element = self.wait_for_element(locator)
         self.driver.execute_script("arguments[0].scrollIntoView();", element)
         return element
+
+    def get_current_window_handle(self):
+        """Получение хэндла текущего окна."""
+        return self.driver.current_window_handle
+
+    def get_all_window_handles(self):
+        """Получение списка всех открытых окон."""
+        return self.driver.window_handles
+
+    def switch_to_window(self, window_handle):
+        """Переключение на указанное окно."""
+        self.driver.switch_to.window(window_handle)
+
+    def wait_for_number_of_windows_to_be(self, number, timeout=Config.TIMEOUT):
+        """Ожидание определенного количества открытых окон."""
+        wait = WebDriverWait(self.driver, timeout)
+        return wait.until(EC.number_of_windows_to_be(number))
+
+    def wait_for_url_contains(self, text, timeout=Config.TIMEOUT):
+        """Ожидание, что URL содержит указанный текст."""
+        wait = WebDriverWait(self.driver, timeout)
+        return wait.until(EC.url_contains(text))
+
+    def close_current_window(self):
+        """Закрытие текущего окна."""
+        self.driver.close()
+
+    def is_url_contains(self, text):
+        """Проверка, что текущий URL содержит указанный текст."""
+        return text in self.get_current_url()

@@ -50,3 +50,26 @@ class MainPage(BasePage):
     def click_yandex_logo(self):
         """Клик по логотипу Яндекс для перехода на главную страницу Дзен."""
         self.click_element_js(self.locators.YANDEX_LOGO)
+
+    def wait_for_new_window_and_switch(self):
+        """
+        Ожидание открытия нового окна и переключение на него.
+        Returns:
+            str: Хэндл нового окна
+        """
+        original_window = self.get_current_window_handle()
+        self.wait_for_number_of_windows_to_be(2)
+
+        for window_handle in self.get_all_window_handles():
+            if window_handle != original_window:
+                self.switch_to_window(window_handle)
+                return window_handle
+        return None
+
+    def is_dzen_opened(self):
+        """
+        Проверка, что открыта страница Дзен.
+        Returns:
+            bool: True если открыт Дзен, иначе False
+        """
+        return self.is_url_contains("dzen.ru")
