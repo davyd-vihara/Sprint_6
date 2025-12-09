@@ -1,0 +1,10 @@
+# Automation testing dependencies for Yandex Scooter UI tests
+
+# Selenium WebDriver for browser automation
+selenium==4.38.0
+
+# Pytest framework for test execution and reporting
+pytest==8.4.2
+
+# Allure integration for beautiful test reports
+allure-pytest==2.15.0
